@@ -12,15 +12,18 @@ web page, firing the SQL query and rendering the appropriate output
 from flask import Flask, request
 from flask import render_template
 from flask_mysqldb import MySQL
+import hashlib
+import os
+import binascii
 
 # initializing the webapp
 app = Flask(__name__)
 
 # MySQL Database Connection configurations.
-app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_HOST'] = 'dspinstance.cu7xxjgzv7fk.us-east-2.rds.amazonaws.com'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'root'
-app.config['MYSQL_DB'] = 'sys'
+app.config['MYSQL_PASSWORD'] = '12345678'
+app.config['MYSQL_DB'] = 'dsp'
 
 mysql = MySQL(app)
 
@@ -39,13 +42,17 @@ def login():
         username = request.form.get("uname", False)
         password = request.form.get("passwd", False)
         cur = mysql.connection.cursor()
-        cur.execute("SELECT student_id, mask_SSN(ssn), first_name,last_name,birth_date,email_id,department_id FROM stud"
-                    "ent")
-        # cur.execute("SELECT ID, FirstName, LastName, mask_SSN(SSN) , Email FROM student WHERE Email =  '{0}' AND "
-        # "Password = '{1}'".format(username, password))
+        cur.execute("SELECT * FROM authentication WHERE user_id =  '{0}' AND "
+        "password = '{1}'".format(username, hash_password(password)))
         result = cur.fetchall()
+        print(len(result))
+        print(hash_password(password))
+        if len(result) == 1:
+            cur.execute("select * from student")
+            result = cur.fetchall()
+            return render_template('home.html',data=result)
         cur.close()
-        return render_template('home.html',data=result)
+        
     return render_template('login.html')
 
 
@@ -62,12 +69,22 @@ def register():
         lastname = request.form.get("lname", False)
         dob = request.form.get("dob", False)
         email = request.form.get("email", False)
+        password = request.form.get("passwd", False)
+        ssn = request.form.get("ssn", False)
+        department = request.form.get("dpt", False)
         cur = mysql.connection.cursor()
-        cur.execute("select ssn from student where first_name = '%s'" % "'; select true; --")
+        cur.execute("insert into authentication values('{0}', '{1}')".format(firstname[0:1]+lastname, hash_password(password)))
+        print(hash_password(password))
+        cur.execute("insert into student(ssn, first_name, last_name, birth_date, email_id, department_id) values('{0}','{1}','{2}','{3}','{4}','{5}')".format(ssn, firstname, lastname, dob, email, department))
         result = cur.fetchall()
+        mysql.connection.commit()
         cur.close()
         return render_template('home.html',data=result)
     return render_template('register.html')
+
+def hash_password(password):
+    """Hash a password for storing."""
+    return hashlib.sha256(password.encode()).hexdigest()
 
 # main method
 if __name__ == '__main__':
