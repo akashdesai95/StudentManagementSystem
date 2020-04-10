@@ -69,12 +69,22 @@ def register():
         lastname = request.form.get("lname", False)
         dob = request.form.get("dob", False)
         email = request.form.get("email", False)
+        password = request.form.get("passwd", False)
+        ssn = request.form.get("ssn", False)
+        department = request.form.get("dpt", False)
         cur = mysql.connection.cursor()
-        cur.execute("select ssn from student where first_name = '%s'" % "'; select true; --")
+        cur.execute("insert into authentication values('{0}', '{1}')".format(firstname[0:1]+lastname, hash_password(password)))
+        print(hash_password(password))
+        cur.execute("insert into student(ssn, first_name, last_name, birth_date, email_id, department_id) values('{0}','{1}','{2}','{3}','{4}','{5}')".format(ssn, firstname, lastname, dob, email, department))
         result = cur.fetchall()
+        mysql.connection.commit()
         cur.close()
         return render_template('home.html',data=result)
     return render_template('register.html')
+
+def hash_password(password):
+    """Hash a password for storing."""
+    return hashlib.sha256(password.encode()).hexdigest()
 
 # main method
 if __name__ == '__main__':
