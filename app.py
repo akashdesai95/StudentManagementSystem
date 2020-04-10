@@ -17,10 +17,10 @@ from flask_mysqldb import MySQL
 app = Flask(__name__)
 
 # MySQL Database Connection configurations.
-app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_HOST'] = 'dspinstance.cu7xxjgzv7fk.us-east-2.rds.amazonaws.com'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'root'
-app.config['MYSQL_DB'] = 'sys'
+app.config['MYSQL_PASSWORD'] = '12345678'
+app.config['MYSQL_DB'] = 'dsp'
 
 mysql = MySQL(app)
 
