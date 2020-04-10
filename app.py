@@ -12,6 +12,9 @@ web page, firing the SQL query and rendering the appropriate output
 from flask import Flask, request
 from flask import render_template
 from flask_mysqldb import MySQL
+import hashlib
+import os
+import binascii
 
 # initializing the webapp
 app = Flask(__name__)
@@ -39,13 +42,17 @@ def login():
         username = request.form.get("uname", False)
         password = request.form.get("passwd", False)
         cur = mysql.connection.cursor()
-        cur.execute("SELECT student_id, mask_SSN(ssn), first_name,last_name,birth_date,email_id,department_id FROM stud"
-                    "ent")
-        # cur.execute("SELECT ID, FirstName, LastName, mask_SSN(SSN) , Email FROM student WHERE Email =  '{0}' AND "
-        # "Password = '{1}'".format(username, password))
+        cur.execute("SELECT * FROM authentication WHERE user_id =  '{0}' AND "
+        "password = '{1}'".format(username, hash_password(password)))
         result = cur.fetchall()
+        print(len(result))
+        print(hash_password(password))
+        if len(result) == 1:
+            cur.execute("select * from student")
+            result = cur.fetchall()
+            return render_template('home.html',data=result)
         cur.close()
-        return render_template('home.html',data=result)
+        
     return render_template('login.html')
 
 
