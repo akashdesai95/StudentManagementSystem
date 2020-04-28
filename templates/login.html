@@ -1,0 +1,71 @@
+<!--
+File Name : login.html
+Date : 03/04/2020
+Version : 1.0
+ -->
+<!DOCTYPE html>
+<html>
+<head>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<style>
+body{
+    background-color:#cfdde8;
+    font-size:14px;
+    color:#fff;
+}
+.container{
+    width:300px;
+    max-width:100%;
+    margin:100px auto;
+}
+. container h2{
+    text-align:center;
+    font-size:20px;
+}
+
+.container .btn-login{
+    background-color:#058af0;
+    color:#fff;
+}
+.btn {
+    white-space:normal !important;
+    word-wrap: break-word;
+}
+</style>
+</head>
+<body>
+
+
+	<h1 style="text-align : center; color : #373b3b ; margin-top:20px"> Student Management Portal </h1>
+
+    <div class="container">
+    <h2 style="color:#373b3b;">Enter Details</h2>
+	<form method="post">
+		<div class="row">
+			<div class="col-md-12 form-group">
+				<input type="text" class="form-control" placeholder="User Name" name="uname" id="uname">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 form-group">
+				<input type="password" placeholder="Password" class="form-control" name="passwd" id = "passwd">
+			</div>
+		</div>
+		<div class="row">
+        <div class="col-sm-6 form-group">
+            <input type="submit" class="btn btn-block btn-login" value="Log In">
+        </div>
+		<div class="col-sm-6 form-group">
+			<a href="register.html" class="btn btn-block btn-login" role ="button">New User?</a>
+        </div>
+
+
+		</div>
+	</form>
+</div>
+</body>
+</html>
+
+
